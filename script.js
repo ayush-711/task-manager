@@ -11,6 +11,11 @@ function onPressAdd() {
   }
 
   const li = document.createElement('li');
+  // checkbox
+  const checkbox = document.createElement('input');
+  checkbox.type = 'checkbox';
+  li.appendChild(checkbox);
+
   const p = document.createElement("p");
   p.innerHTML = inputBox.value;
   li.appendChild(p)
@@ -29,7 +34,7 @@ function onPressAdd() {
 
   taskList.appendChild(li);
 
-  saveLocalTasks(inputBox.value);
+  saveLocalTasks({ text: inputBox.value, completed: false });
 
   inputBox.value = '';
   updateTotalCount();
@@ -42,6 +47,11 @@ function updateTM(e) {
     deleteLocalTasks(e.target.parentElement);
     updateTotalCount();
   }
+
+  if (e.target.type === 'checkbox') {
+    toggleCompleted(e.target);
+  }
+
 }
 
 // functionality - to save the tasks in Local Storage
@@ -70,9 +80,16 @@ function getLocalTasks() {
     tasks = JSON.parse(localStorage.getItem("tasks"));
     tasks.forEach(task => {
       const li = document.createElement('li');
+
+      const checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      checkbox.checked = task.completed;
+      li.appendChild(checkbox);
+
       const p = document.createElement("p");
-      p.innerHTML = task;
-      li.appendChild(p)
+      p.innerHTML = task.text;
+      li.appendChild(p);
+      if (task.completed) { li.classList.add('completed'); }
       const deleteBtn = document.createElement("button");
       deleteBtn.innerText = "Remove!";
       deleteBtn.classList.add("btn", "deleteBtn");
@@ -94,12 +111,32 @@ function deleteLocalTasks(task) {
     tasks = JSON.parse(localStorage.getItem("tasks"));
   }
 
-  let taskText = task.children[0].innerHTML;
+  let taskText = task.children[1].innerHTML;
+  // tasks = tasks.filter(t => t.text !== taskText);
   let taskIndex = tasks.indexOf(taskText);
   tasks.splice(taskIndex, 1);
   localStorage.setItem("tasks", JSON.stringify(tasks));
   console.log(taskIndex);
   
+}
+
+
+//toggle completed state
+function toggleCompleted(checkbox) {
+  const li = checkbox.parentElement;
+  const taskText = li.children[1].innerHTML;
+
+  let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+
+  tasks = tasks.map(task => {
+    if (task.text === taskText) {
+      task.completed = checkbox.checked;
+    }
+    return task;
+  });
+
+  li.classList.toggle('completed');
+  localStorage.setItem("tasks", JSON.stringify(tasks));
 }
 
 //Counters Wrapper 

@@ -97,3 +97,8 @@ ul li p {
 .editBtn{
     color: rgb(81, 255, 0);
 }
+
+ul li input[type="checkbox"]:checked + p {
+    text-decoration: line-through;
+    opacity: 0.6;
+}
