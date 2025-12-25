@@ -108,3 +108,16 @@ ul li input[type="checkbox"]:checked + p {
     gap: 30px; 
     margin-top: 10px;
 }
+
+.counter-wrapper button {
+
+    padding:4px; 
+    border: none;
+    border-radius: 8px;
+    background-color: #e63946;
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+

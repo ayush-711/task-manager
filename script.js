@@ -155,7 +155,7 @@ const completedCounter = document.createElement('span');
 completedCounter.innerText = 'Completed: 0';
 
 counterWrapper.appendChild(totalCounter);
-counterWrapper.appendChild(completedCounter); // 🔹 NEW
+counterWrapper.appendChild(completedCounter);
 taskList.after(counterWrapper);
 
 //combined counters update
@@ -166,7 +166,40 @@ function updateCounters() {
     `Completed: ${tasks.filter(t => t.completed).length}`;
 }
 
+// 🔹 NEW: Clear Completed button
+const clearCompletedBtn = document.createElement('button');
+clearCompletedBtn.innerText = 'Clear Completed';
+counterWrapper.appendChild(clearCompletedBtn);
 
+taskList.after(counterWrapper);
+
+// combined counters update
+function updateCounters() {
+  const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+  totalCounter.innerText = `Total Tasks: ${tasks.length}`;
+  completedCounter.innerText =
+    `Completed: ${tasks.filter(t => t.completed).length}`;
+}
+
+//clear completed functionality
+function clearCompletedTasks() {
+  let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+
+  tasks = tasks.filter(task => !task.completed);
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+
+  const allTasks = document.querySelectorAll('#tasksList li');
+  allTasks.forEach(li => {
+    if (li.classList.contains('completed')) {
+      li.remove();
+    }
+  });
+
+  updateCounters();
+}
+
+
+clearCompletedBtn.addEventListener('click', clearCompletedTasks);
 document.addEventListener('DOMContentLoaded', getLocalTasks);
 addBtn.addEventListener('click', onPressAdd);
 taskList.addEventListener('click', updateTM)
