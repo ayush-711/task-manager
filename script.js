@@ -37,7 +37,8 @@ function onPressAdd() {
   saveLocalTasks({ text: inputBox.value, completed: false });
 
   inputBox.value = '';
-  updateTotalCount();
+  // updateTotalCount();
+  updateCounters();
 }
 
 // functionality - To Remove the task.
@@ -45,7 +46,8 @@ function updateTM(e) {
   if (e.target.innerHTML === 'Remove!') {
     taskList.removeChild(e.target.parentElement);
     deleteLocalTasks(e.target.parentElement);
-    updateTotalCount();
+    // updateTotalCount();
+    updateCounters();
   }
 
   if (e.target.type === 'checkbox') {
@@ -98,7 +100,8 @@ function getLocalTasks() {
     });
 
   }
-    updateTotalCount();
+  // updateTotalCount();
+  updateCounters(); 
 }
 
 
@@ -137,6 +140,7 @@ function toggleCompleted(checkbox) {
 
   li.classList.toggle('completed');
   localStorage.setItem("tasks", JSON.stringify(tasks));
+  updateCounters(); 
 }
 
 //Counters Wrapper 
@@ -146,14 +150,22 @@ counterWrapper.classList.add('counter-wrapper');
 const totalCounter = document.createElement('span');
 totalCounter.innerText = 'Total Tasks: 0';
 
+//completed counter
+const completedCounter = document.createElement('span');
+completedCounter.innerText = 'Completed: 0';
+
 counterWrapper.appendChild(totalCounter);
+counterWrapper.appendChild(completedCounter); // 🔹 NEW
 taskList.after(counterWrapper);
 
-// total task counter !
-function updateTotalCount() {
+//combined counters update
+function updateCounters() {
   const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
   totalCounter.innerText = `Total Tasks: ${tasks.length}`;
+  completedCounter.innerText =
+    `Completed: ${tasks.filter(t => t.completed).length}`;
 }
+
 
 document.addEventListener('DOMContentLoaded', getLocalTasks);
 addBtn.addEventListener('click', onPressAdd);

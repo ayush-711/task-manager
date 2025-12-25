@@ -102,3 +102,9 @@ ul li input[type="checkbox"]:checked + p {
     text-decoration: line-through;
     opacity: 0.6;
 }
+
+.counter-wrapper {
+    display: flex;
+    gap: 30px; 
+    margin-top: 10px;
+}
