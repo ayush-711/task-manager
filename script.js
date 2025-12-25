@@ -3,7 +3,6 @@ const taskList = document.querySelector('#tasksList');
 const inputBox = document.querySelector('#inputBox');
 
 
-
 function onPressAdd() {
 
   if (inputBox.value.length === 0) {
@@ -33,6 +32,7 @@ function onPressAdd() {
   saveLocalTasks(inputBox.value);
 
   inputBox.value = '';
+  updateTotalCount();
 }
 
 // functionality - To Remove the task.
@@ -40,6 +40,7 @@ function updateTM(e) {
   if (e.target.innerHTML === 'Remove!') {
     taskList.removeChild(e.target.parentElement);
     deleteLocalTasks(e.target.parentElement);
+    updateTotalCount();
   }
 }
 
@@ -80,6 +81,7 @@ function getLocalTasks() {
     });
 
   }
+    updateTotalCount();
 }
 
 
@@ -100,6 +102,21 @@ function deleteLocalTasks(task) {
   
 }
 
+//Counters Wrapper 
+const counterWrapper = document.createElement('div');
+counterWrapper.classList.add('counter-wrapper');
+
+const totalCounter = document.createElement('span');
+totalCounter.innerText = 'Total Tasks: 0';
+
+counterWrapper.appendChild(totalCounter);
+taskList.after(counterWrapper);
+
+// total task counter !
+function updateTotalCount() {
+  const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+  totalCounter.innerText = `Total Tasks: ${tasks.length}`;
+}
 
 document.addEventListener('DOMContentLoaded', getLocalTasks);
 addBtn.addEventListener('click', onPressAdd);
